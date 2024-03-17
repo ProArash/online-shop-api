@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum PayStatus {
+  PENDING
+  SUCCESS
+  CANCELED
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  username    String    @unique
+  password    String
+  name        String
+  email       String?
+  address     String?
+  mobile      String?
+  profile_url String?
+  role        UserRole  @default(USER)
+  cart        Cart[]
+  invoice     Invoice[]
+}
+
+model TelegramUser {
+  id           Int     @id @default(autoincrement())
+  uid          String  @unique
+  username     String?
+  name         String
+  bio          String?
+  lang         String
+  rude_counter Int     @default(0)
+  mobile       String?
+}
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  title       String
+  caption     String?
+  price       BigInt
+  stock       Boolean
+  image_url   String?
+  category    Category  @relation(fields: [category_id], references: [id])
+  category_id Int
+  Cart        Cart?     @relation(fields: [cart_id], references: [id])
+  cart_id     Int?
+  feature     Feature[]
+}
+
+model Category {
+  id      Int       @id @default(autoincrement())
+  title   String
+  product Product[]
+}
+
+model Feature {
+  id         Int     @id @default(autoincrement())
+  key        String
+  value      String
+  product    Product? @relation(fields: [product_id], references: [id])
+  product_id Int
+}
+
+model Cart {
+  id      Int       @id @default(autoincrement())
+  product Product[]
+  user    User?     @relation(fields: [user_id], references: [id])
+  user_id Int?
+}
+
+model Invoice {
+  id          Int       @id @default(autoincrement())
+  total_price BigInt?
+  status      PayStatus @default(PENDING)
+  user        User?     @relation(fields: [user_id], references: [id])
+  user_id     Int?
+}
+
+model RudeWord {
+  id    Int    @id @default(autoincrement())
+  title String @unique
+}
