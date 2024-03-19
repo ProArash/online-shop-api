@@ -39,13 +39,15 @@ model User {
 }
 
 model TelegramUser {
-  id           Int     @id @default(autoincrement())
-  uid          String  @unique
+  id           Int      @id @default(autoincrement())
+  uid          String   @unique
   username     String?
-  name         String
+  fname        String
+  lname        String?
   bio          String?
   lang         String
-  rude_counter Int     @default(0)
+  rude_counter Int      @default(0)
+  role         UserRole @default(USER)
   mobile       String?
 }
 
@@ -70,7 +72,7 @@ model Category {
 }
 
 model Feature {
-  id         Int     @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   key        String
   value      String
   product    Product? @relation(fields: [product_id], references: [id])
