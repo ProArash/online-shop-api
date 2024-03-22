@@ -4,8 +4,8 @@ import bodyParser from "body-parser";
 import express from "express";
 import { PORT } from "./utils/constants";
 import { routes } from "./routers";
+import { reqLogger } from "./middlewares/req.middleware";
 const app = express();
-
 
 const main = async () => {
     // consts
@@ -14,11 +14,12 @@ const main = async () => {
     app.use(bodyParser.json());
 
     // routers
-    app.use("/", routes);
+    app.use("/", reqLogger, routes);
 
     // launch server
     app.listen(PORT, async () => {
-        console.log(`server is running on port${PORT}`);
+        console.clear();
+        console.log(`server is running on port: ${PORT}`);
     });
 };
 

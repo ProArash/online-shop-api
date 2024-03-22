@@ -5,7 +5,10 @@ import TelegramBot, { Message, Update } from "node-telegram-bot-api";
 
 export const telegramRouter = router;
 
-const bot = new TelegramBot(TELEGRAM_TOKEN, { polling: false, webHook: true });
+const bot = new TelegramBot(TELEGRAM_TOKEN, {
+    polling: false,
+    webHook: true,
+});
 
 bot.setWebHook(`${WEBHOOK_URL}/bot${TELEGRAM_TOKEN}`);
 

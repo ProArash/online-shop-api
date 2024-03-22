@@ -33,9 +33,12 @@ model User {
   address     String?
   mobile      String?
   profile_url String?
+  token       String
   role        UserRole  @default(USER)
-  cart        Cart[]
+  cart        Cart?     @relation(fields: [cart_id], references: [id])
+  cart_id     Int?
   invoice     Invoice[]
+  item        Item[]
 }
 
 model TelegramUser {
@@ -51,39 +54,53 @@ model TelegramUser {
   mobile       String?
 }
 
-model Product {
-  id          Int       @id @default(autoincrement())
+model Device {
+  id         Int     @id @default(autoincrement())
+  device_id  String?
+  ip_address String
+}
+
+model Item {
+  id          Int         @id @default(autoincrement())
   title       String
   caption     String?
-  price       BigInt
+  price       String
   stock       Boolean
-  image_url   String?
-  category    Category  @relation(fields: [category_id], references: [id])
+  category    Category    @relation(fields: [category_id], references: [id])
   category_id Int
-  Cart        Cart?     @relation(fields: [cart_id], references: [id])
+  cart        Cart?       @relation(fields: [cart_id], references: [id])
   cart_id     Int?
+  user        User?       @relation(fields: [user_id], references: [id])
+  user_id     Int?
   feature     Feature[]
+  image       ItemImage[]
+}
+
+model ItemImage {
+  id      Int    @id @default(autoincrement())
+  url     String
+  item    Item?  @relation(fields: [item_id], references: [id])
+  item_id Int
 }
 
 model Category {
-  id      Int       @id @default(autoincrement())
-  title   String
-  product Product[]
+  id    Int    @id @default(autoincrement())
+  title String @unique
+  item  Item[]
 }
 
 model Feature {
-  id         Int      @id @default(autoincrement())
-  key        String
-  value      String
-  product    Product? @relation(fields: [product_id], references: [id])
-  product_id Int
+  id      Int    @id @default(autoincrement())
+  key     String
+  value   String
+  item    Item?  @relation(fields: [item_id], references: [id])
+  item_id Int
 }
 
 model Cart {
-  id      Int       @id @default(autoincrement())
-  product Product[]
-  user    User?     @relation(fields: [user_id], references: [id])
-  user_id Int?
+  id    Int    @id @default(autoincrement())
+  item  Item[]
+  users User[]
 }
 
 model Invoice {
