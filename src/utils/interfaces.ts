@@ -9,6 +9,7 @@ export interface ITelegramUser {
 }
 
 export interface IUser {
+    id?: number;
     username: string;
     password: string;
     name: string;
@@ -18,9 +19,14 @@ export interface IUser {
     profile_url?: string;
     token: string;
 }
+export interface IItem {
+    title: string;
+    caption: string;
+    stock: boolean;
+    price: string;
+}
 
 export interface IUserPayload {
-    uid: number;
     username: string;
     name: string;
 }

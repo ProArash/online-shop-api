@@ -1,31 +1,38 @@
+import { IItem } from "../utils/interfaces";
 import { prismaClient } from "../utils/prisma-client";
 
-export const ItemService = {
+export const itemService = {
     newItem: async (
         title: string,
         caption: string,
         price: string,
         stock: boolean,
-        category_id: number,
-        user_id: number
+        uid: number,
+        cid: number
     ) => {
+        const item = await prismaClient().item.findUnique({
+            where:{
+                title
+            }
+        })
+        if(item){
+            return `Item ${title} exsits.`
+        }
         return await prismaClient().item.create({
             data: {
                 title,
                 caption,
                 price,
                 stock,
-                category_id,
-                user_id,
+                user_id: uid,
+                categoryId: cid,
             },
         });
     },
-    getItems: async (uid?: number) => {
-        return await prismaClient().item.findMany({
-            where: { user_id: uid },
-        });
+    getItems: async () => {
+        return await prismaClient().item.findMany();
     },
-    getItemByUserId: async (pid: number, uid: number) => {
+    getItemsByUserId: async (pid: number, uid: number) => {
         return await prismaClient().item.findUnique({
             where: {
                 id: pid,
@@ -47,14 +54,14 @@ export const ItemService = {
             },
         });
     },
-    disableItemById: async (pid: number, uid: number) => {
+    changeItemStatusByUserId: async (pid: number, uid: number) => {
         return await prismaClient().item.update({
             where: {
                 id: pid,
                 user_id: uid,
             },
             data: {
-                stock: false,
+                stock: true ? false : true,
             },
         });
     },
@@ -64,22 +71,21 @@ export const ItemService = {
         caption: string,
         price: string,
         stock: boolean,
-        category_id: number
+        uid: number,
+        cid: number
     ) => {
         return await prismaClient().item.update({
             where: {
                 id: pid,
+                user_id: uid,
             },
             data: {
                 title,
                 caption,
                 price,
                 stock,
-                category_id,
+                categoryId: cid,
             },
         });
-    },
-    updateItemImage: async (image: any) => {
-        //TODO
     },
 };

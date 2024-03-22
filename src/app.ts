@@ -5,16 +5,16 @@ import express from "express";
 import { PORT } from "./utils/constants";
 import { routes } from "./routers";
 import { reqLogger } from "./middlewares/req.middleware";
+import morgan from "morgan";
 const app = express();
 
 const main = async () => {
-    // consts
-
     // middlewares
     app.use(bodyParser.json());
+    app.use(morgan("dev"));
 
     // routers
-    app.use("/", reqLogger, routes);
+    app.use("/", routes);
 
     // launch server
     app.listen(PORT, async () => {

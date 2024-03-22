@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { prismaClient } from "../utils/prisma-client";
-import { bcrypt } from "../utils/import-bcrypt";
+import  bcrypt  from "bcrypt";
 import { IUser } from "../utils/interfaces";
 import { tokenGenerator } from "../utils/token-generator";
 import { prismaExclude } from "../utils/prisma-exclude";
@@ -79,7 +79,9 @@ export const authController = {
                 },
             });
             res.status(200).json({
-                data: login.token,
+                data: {
+                    token: login.token,
+                },
             });
         } catch (error) {
             console.log(error);

@@ -1,7 +1,7 @@
 import { UserRole } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import { prismaClient } from "../utils/prisma-client";
-import { jwt } from "../utils/import-jwt";
+import jwt from "jsonwebtoken";
 import { SECRET } from "../utils/constants";
 import { IUserPayload } from "../utils/interfaces";
 
@@ -10,10 +10,10 @@ export const requireRole = (role: UserRole) => {
     let payload: IUserPayload;
 
     switch (role) {
-        case "USER":
-            roles.push(UserRole.USER);
         case "ADMIN":
             roles.push(UserRole.ADMIN);
+        case "USER":
+            roles.push(UserRole.USER);
     }
 
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -45,6 +45,8 @@ export const requireRole = (role: UserRole) => {
                     data: "insufficient permission.",
                 });
             }
+            //@ts-ignore
+            req.uid = user.id;
             next();
         }
     };

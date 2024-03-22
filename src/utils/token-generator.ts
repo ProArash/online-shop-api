@@ -1,5 +1,5 @@
 import { SECRET } from "./constants";
-import { jwt } from "./import-jwt";
+import jwt from 'jsonwebtoken'
 import { IUserPayload } from "./interfaces";
 
 export const tokenGenerator = async (payload: IUserPayload) => {

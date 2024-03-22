@@ -61,19 +61,17 @@ model Device {
 }
 
 model Item {
-  id          Int         @id @default(autoincrement())
-  title       String
-  caption     String?
-  price       String
-  stock       Boolean
-  category    Category    @relation(fields: [category_id], references: [id])
-  category_id Int
-  cart        Cart?       @relation(fields: [cart_id], references: [id])
-  cart_id     Int?
-  user        User?       @relation(fields: [user_id], references: [id])
-  user_id     Int?
-  feature     Feature[]
-  image       ItemImage[]
+  id         Int         @id @default(autoincrement())
+  title      String      @unique
+  caption    String?
+  price      String
+  stock      Boolean
+  user       User?       @relation(fields: [user_id], references: [id])
+  user_id    Int?
+  feature    Feature[]
+  image      ItemImage[]
+  category   Category?   @relation(fields: [categoryId], references: [id])
+  categoryId Int?
 }
 
 model ItemImage {
@@ -98,9 +96,8 @@ model Feature {
 }
 
 model Cart {
-  id    Int    @id @default(autoincrement())
-  item  Item[]
-  users User[]
+  id   Int    @id @default(autoincrement())
+  user User[]
 }
 
 model Invoice {
