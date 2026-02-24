@@ -20,7 +20,7 @@ export class ProductService {
   ) {}
 
   async create(createProductDto: CreateProductDto): Promise<Product> {
-    const { categoryId, images, features, ...productData } = createProductDto;
+    const { categoryId, imageIds, features, ...productData } = createProductDto;
 
     const product = this.productRepository.create(productData);
 
@@ -31,12 +31,8 @@ export class ProductService {
 
     const savedProduct = await this.productRepository.save(product);
 
-    if (images?.length) {
-      const imageEntities = images.map((url) => ({
-        url,
-        productId: savedProduct.id,
-      }));
-      await this.imageService.createMany(imageEntities);
+    if (imageIds?.length) {
+      await this.imageService.assignToProduct(imageIds, savedProduct.id);
     }
 
     if (features?.length) {
@@ -83,7 +79,8 @@ export class ProductService {
     updateProductDto: UpdateProductDto,
   ): Promise<Product> {
     const product = await this.findOne(id);
-    const { categoryId, images, features, ...productData } = updateProductDto;
+    const { categoryId, imageIds, removeImageIds, features, ...productData } =
+      updateProductDto;
 
     Object.assign(product, productData);
 
@@ -94,13 +91,12 @@ export class ProductService {
 
     await this.productRepository.save(product);
 
-    if (images?.length) {
-      await this.imageService.removeByProductId(id);
-      const imageEntities = images.map((url) => ({
-        url,
-        productId: id,
-      }));
-      await this.imageService.createMany(imageEntities);
+    if (removeImageIds?.length) {
+      await this.imageService.removeFromProduct(removeImageIds);
+    }
+
+    if (imageIds?.length) {
+      await this.imageService.addToProduct(imageIds, id);
     }
 
     if (features?.length) {

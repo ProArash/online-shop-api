@@ -64,6 +64,17 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
+  async updateProfile(
+    id: number,
+    updateProfileDto: UpdateUserDto,
+  ): Promise<User> {
+    const user = await this.findOne(id);
+
+    Object.assign(user, updateProfileDto);
+
+    return this.userRepository.save(user);
+  }
+
   async remove(id: number): Promise<void> {
     const user = await this.findOne(id);
     await this.userRepository.softRemove(user);

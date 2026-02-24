@@ -8,7 +8,7 @@ import { AuthService } from '@/auth/auth.service';
 import { UserPayload } from '@/lib/user.payload';
 import { AuthCookie } from '@/lib/auth.cookie';
 
-interface RequestWithCookie extends Request {
+export interface RequestWithCookie extends Request {
   cookies: AuthCookie;
   res: Response;
 }

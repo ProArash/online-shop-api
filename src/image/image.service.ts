@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { Image } from './entities/image.entity';
 import { CreateImageDto } from './dto/create-image.dto';
 import { UpdateImageDto } from './dto/update-image.dto';
@@ -25,6 +25,12 @@ export class ImageService {
   async findAll(): Promise<Image[]> {
     return this.imageRepository.find({
       relations: ['product'],
+    });
+  }
+
+  async findByIds(ids: number[]): Promise<Image[]> {
+    return this.imageRepository.find({
+      where: { id: In(ids) },
     });
   }
 
@@ -53,6 +59,36 @@ export class ImageService {
     Object.assign(image, updateImageDto);
 
     return this.imageRepository.save(image);
+  }
+
+  async assignToProduct(
+    imageIds: number[],
+    productId: number,
+  ): Promise<Image[]> {
+    await this.imageRepository.update(
+      { id: In(imageIds) },
+      { product: { id: productId } },
+    );
+
+    return this.findByIds(imageIds);
+  }
+
+  async addToProduct(imageIds: number[], productId: number): Promise<Image[]> {
+    await this.imageRepository.update(
+      { id: In(imageIds) },
+      { product: { id: productId } },
+    );
+
+    return this.findByProductId(productId);
+  }
+
+  async removeFromProduct(imageIds: number[]): Promise<void> {
+    await this.imageRepository
+      .createQueryBuilder()
+      .update(Image)
+      .set({ productId: () => 'NULL' })
+      .whereInIds(imageIds)
+      .execute();
   }
 
   async remove(id: number): Promise<void> {

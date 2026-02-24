@@ -73,11 +73,11 @@ export class CreateProductDto {
   @IsNumber()
   categoryId?: number;
 
-  @ApiPropertyOptional({ type: [String] })
+  @ApiPropertyOptional({ type: [Number], description: 'Array of image IDs' })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
-  images?: string[];
+  @IsNumber({}, { each: true })
+  imageIds?: number[];
 
   @ApiPropertyOptional({ type: [CreateProductFeatureDto] })
   @IsOptional()

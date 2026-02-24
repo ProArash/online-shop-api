@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { FixEntity } from '@/lib/fix.entity';
 import { Product } from '@/product/entities/product.entity';
 
@@ -9,6 +9,11 @@ export class Image extends FixEntity {
 
   @ManyToOne(() => Product, (product) => product.images, {
     onDelete: 'CASCADE',
+    nullable: true,
   })
+  @JoinColumn({ name: 'productId' })
   product: Product;
+
+  @Column({ nullable: true })
+  productId: number;
 }
