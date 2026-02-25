@@ -1,3 +1,4 @@
+// category.controller.ts
 import {
   Controller,
   Get,
@@ -41,12 +42,30 @@ export class CategoryController {
     return this.categoryService.findAll();
   }
 
+  @Get('tree')
+  @ApiOperation({ summary: 'Get all categories as tree structure' })
+  @ApiResponse({ status: 200, description: 'Return all categories as tree' })
+  findAllTree() {
+    return this.categoryService.findAllTree();
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get category by id' })
   @ApiResponse({ status: 200, description: 'Return category' })
   @ApiResponse({ status: 404, description: 'Category not found' })
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.categoryService.findOne(id);
+  }
+
+  @Get(':id/tree')
+  @ApiOperation({ summary: 'Get category with all children as tree' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return category with all children',
+  })
+  @ApiResponse({ status: 404, description: 'Category not found' })
+  findWithAllChildren(@Param('id', ParseIntPipe) id: number) {
+    return this.categoryService.findWithAllChildren(id);
   }
 
   @Patch(':id')

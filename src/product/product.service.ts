@@ -1,12 +1,14 @@
+// product.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { ProductFeature } from './entities/product-feature.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ImageService } from '@/image/image.service';
 import { CategoryService } from '@/category/category.service';
+import { Category } from '@/category/entities/category.entity';
 
 @Injectable()
 export class ProductService {
@@ -27,6 +29,7 @@ export class ProductService {
     if (categoryId) {
       const category = await this.categoryService.findOne(categoryId);
       product.category = category;
+      product.categoryId = categoryId;
     }
 
     const savedProduct = await this.productRepository.save(product);
@@ -69,9 +72,31 @@ export class ProductService {
 
   async findByCategory(categoryId: number): Promise<Product[]> {
     return this.productRepository.find({
-      where: { category: { id: categoryId } },
+      where: { categoryId },
       relations: ['category', 'images', 'features'],
     });
+  }
+
+  async findByCategoryAndChildren(categoryId: number): Promise<Product[]> {
+    const category = await this.categoryService.findWithAllChildren(categoryId);
+    const categoryIds = this.extractAllCategoryIds(category);
+
+    return this.productRepository.find({
+      where: { categoryId: In(categoryIds) },
+      relations: ['category', 'images', 'features'],
+    });
+  }
+
+  private extractAllCategoryIds(category: Category): number[] {
+    const ids = [category.id];
+
+    if (category.children && category.children.length > 0) {
+      for (const child of category.children) {
+        ids.push(...this.extractAllCategoryIds(child));
+      }
+    }
+
+    return ids;
   }
 
   async update(
@@ -84,9 +109,15 @@ export class ProductService {
 
     Object.assign(product, productData);
 
-    if (categoryId) {
-      const category = await this.categoryService.findOne(categoryId);
-      product.category = category;
+    if (categoryId !== undefined) {
+      if (categoryId) {
+        const category = await this.categoryService.findOne(categoryId);
+        product.category = category;
+        product.categoryId = categoryId;
+      } else {
+        product.category = null;
+        product.categoryId = null;
+      }
     }
 
     await this.productRepository.save(product);

@@ -1,3 +1,4 @@
+// product.controller.ts
 import {
   Controller,
   Get,
@@ -46,6 +47,18 @@ export class ProductController {
   @ApiResponse({ status: 200, description: 'Return products' })
   findByCategory(@Param('categoryId', ParseIntPipe) categoryId: number) {
     return this.productService.findByCategory(categoryId);
+  }
+
+  @Get('category/:categoryId/all')
+  @ApiOperation({ summary: 'Get products by category and all subcategories' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return products from category and all subcategories',
+  })
+  findByCategoryAndChildren(
+    @Param('categoryId', ParseIntPipe) categoryId: number,
+  ) {
+    return this.productService.findByCategoryAndChildren(categoryId);
   }
 
   @Get(':id')

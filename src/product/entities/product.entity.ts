@@ -1,4 +1,5 @@
-import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
+// product.entity.ts
+import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { FixEntity } from '@/lib/fix.entity';
 import { Category } from '@/category/entities/category.entity';
 import { Image } from '@/image/entities/image.entity';
@@ -31,10 +32,15 @@ export class Product extends FixEntity {
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   discountPrice: number;
 
+  @Column({ nullable: true })
+  categoryId: number | null;
+
   @ManyToOne(() => Category, (category) => category.products, {
     nullable: true,
+    onDelete: 'SET NULL',
   })
-  category: Category;
+  @JoinColumn({ name: 'categoryId' })
+  category: Category | null;
 
   @OneToMany(() => Image, (image) => image.product, { cascade: true })
   images: Image[];
