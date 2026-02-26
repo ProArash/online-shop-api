@@ -2,6 +2,7 @@ import { Entity, Column, OneToMany } from 'typeorm';
 import { FixEntity } from '@/lib/fix.entity';
 import { UserRole } from '@/lib/user.role';
 import { Cart } from '@/cart/entities/cart.entity';
+import { Payment } from '@/payment/entities/payment.entity';
 
 @Entity()
 export class User extends FixEntity {
@@ -37,4 +38,7 @@ export class User extends FixEntity {
 
   @OneToMany(() => Cart, (cart) => cart.user)
   carts: Cart[];
+
+  @OneToMany(() => Payment, (payment) => payment.user)
+  payments: Payment[];
 }

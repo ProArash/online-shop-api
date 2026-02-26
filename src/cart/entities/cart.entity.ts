@@ -2,12 +2,8 @@ import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
 import { FixEntity } from '@/lib/fix.entity';
 import { User } from '@/user/entities/user.entity';
 import { CartItem } from '@/cart/entities/cart-item.entity';
-
-export enum CartStatus {
-  ACTIVE = 'active',
-  COMPLETED = 'completed',
-  ABANDONED = 'abandoned',
-}
+import { Payment } from '@/payment/entities/payment.entity';
+import { CartStatus } from '@/lib/cart.status';
 
 @Entity()
 export class Cart extends FixEntity {
@@ -31,4 +27,7 @@ export class Cart extends FixEntity {
 
   @OneToMany(() => CartItem, (cartItem) => cartItem.cart, { cascade: true })
   items: CartItem[];
+
+  @OneToMany(() => Payment, (payment) => payment.cart)
+  payments: Payment[];
 }
