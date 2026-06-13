@@ -1,98 +1,234 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🛒 Online Shop — NestJS Application
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+> Full-featured e-commerce backend built with **NestJS**, **TypeORM**, and **PostgreSQL**.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 📦 Features
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- 🛍️ **Products** — CRUD, search, filters, pagination, image upload
+- 🛒 **Cart** — Add / remove / update items, persist per user
+- 👤 **User Area** — Register, login, profile, order history
+- 🔐 **Auth** — JWT-based authentication, role guards
+- ⭐ **Comments & Reviews** — Per product, moderation flow
+- 📦 **Orders** — Checkout, status tracking, invoice generation
+- 🏷️ **Categories** — Tree / flat structure, product assignment
+- ⚙️ **Admin Panel** — Full control over all entities + site settings
+- 🔍 **Search** — Full-text search on products
 
-## Project setup
+---
+
+## 🧱 Tech Stack
+
+| Layer       | Technology                          |
+|-------------|-------------------------------------|
+| Framework   | NestJS                              |
+| Language    | TypeScript                          |
+| ORM         | TypeORM                             |
+| Database    | PostgreSQL                          |
+| Auth        | Passport.js + JWT                   |
+| Validation  | class-validator + class-transformer |
+| File Upload | Multer                              |
+| API Docs    | Swagger / OpenAPI                   |
+
+---
+
+## 🚀 Getting Started
 
 ```bash
-$ npm install
+# clone
+git clone https://github.com/your-org/online-shop.git
+cd online-shop
+
+# install
+npm install
+
+# environment
+cp .env.example .env
+
+# run
+npm run start:dev
 ```
 
-## Compile and run the project
+### Environment Variables
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```env
+PORT=3000
+DATABASE_URL=postgresql://user:pass@localhost:5432/shop
+JWT_SECRET=super-secret-key
+JWT_EXPIRES_IN=7d
+UPLOAD_DIR=./uploads
 ```
 
-## Run tests
+---
+
+## 📁 Project Structure
+
+```
+src/
+├── modules/
+│   ├── auth/               # JWT auth, guards, strategies
+│   ├── users/              # User CRUD, roles
+│   ├── products/           # Product CRUD, search, images
+│   ├── categories/         # Category tree management
+│   ├── cart/               # Cart logic (per user)
+│   ├── orders/             # Order creation, status, history
+│   ├── comments/           # Reviews & comments, moderation
+│   ├── admin/              # Admin dashboard & site settings
+│   └── upload/             # File upload handling
+├── common/
+│   ├── decorators/         # e.g. @CurrentUser, @Roles
+│   ├── guards/             # e.g. RolesGuard, JwtAuthGuard
+│   ├── filters/            # Exception filters
+│   ├── interceptors/       # Transformation / logging
+│   └── dto/                # Shared DTOs
+├── config/                 # Database, Swagger, env config
+└── main.ts                 # Entry point
+```
+
+---
+
+## 🔐 Roles & Permissions
+
+| Role      | Permissions                                      |
+|-----------|--------------------------------------------------|
+| `USER`    | Browse, cart, order, own profile, write comments |
+| `ADMIN`   | Full CRUD on all entities + site settings        |
+| `SUPER`   | Manage admins, system config                     |
+
+---
+
+## 🧩 API Overview
+
+### 🔑 Auth
+
+| Method | Endpoint          | Description        |
+|--------|-------------------|--------------------|
+| POST   | `/auth/register`  | Register new user  |
+| POST   | `/auth/login`     | Login, get JWT     |
+| GET    | `/auth/profile`   | Get current user   |
+
+### 👤 Users
+
+| Method | Endpoint              | Auth  | Description       |
+|--------|-----------------------|-------|-------------------|
+| GET    | `/users`              | Admin | List all users    |
+| GET    | `/users/:id`          | Admin | Get user by ID    |
+| PATCH  | `/users/:id`          | Admin | Update user       |
+| DELETE | `/users/:id`          | Admin | Delete user       |
+
+### 🛍️ Products
+
+| Method | Endpoint                 | Auth  | Description               |
+|--------|--------------------------|-------|---------------------------|
+| GET    | `/products`              | -     | List (search, filter, page) |
+| GET    | `/products/:slug`        | -     | Get by slug               |
+| POST   | `/products`              | Admin | Create product            |
+| PATCH  | `/products/:id`          | Admin | Update product            |
+| DELETE | `/products/:id`          | Admin | Delete product            |
+| POST   | `/products/:id/images`   | Admin | Upload images             |
+
+### 🏷️ Categories
+
+| Method | Endpoint               | Auth  | Description          |
+|--------|------------------------|-------|----------------------|
+| GET    | `/categories`          | -     | List all categories  |
+| GET    | `/categories/:id`      | -     | Get with children    |
+| POST   | `/categories`          | Admin | Create category      |
+| PATCH  | `/categories/:id`      | Admin | Update category      |
+| DELETE | `/categories/:id`      | Admin | Delete category      |
+
+### 🛒 Cart
+
+| Method | Endpoint                    | Auth | Description              |
+|--------|-----------------------------|------|--------------------------|
+| GET    | `/cart`                     | User | Get current cart         |
+| POST   | `/cart/items`               | User | Add item to cart         |
+| PATCH  | `/cart/items/:itemId`       | User | Update item quantity     |
+| DELETE | `/cart/items/:itemId`       | User | Remove item from cart    |
+| DELETE | `/cart`                     | User | Clear entire cart        |
+
+### 📦 Orders
+
+| Method | Endpoint              | Auth     | Description          |
+|--------|-----------------------|----------|----------------------|
+| POST   | `/orders`             | User     | Place order (from cart) |
+| GET    | `/orders`             | User     | My order history     |
+| GET    | `/orders/:id`         | User     | Order details        |
+| GET    | `/orders/admin`       | Admin    | All orders           |
+| PATCH  | `/orders/:id/status`  | Admin    | Update order status  |
+
+### ⭐ Comments & Reviews
+
+| Method | Endpoint                         | Auth     | Description              |
+|--------|----------------------------------|----------|--------------------------|
+| GET    | `/products/:productId/comments`  | -        | List comments for product |
+| POST   | `/products/:productId/comments`  | User     | Add comment / review     |
+| DELETE | `/comments/:id`                  | User     | Delete own comment       |
+| GET    | `/admin/comments`                | Admin    | All comments (pending)   |
+| PATCH  | `/admin/comments/:id/approve`    | Admin    | Approve / reject comment |
+
+### ⚙️ Admin — Site Settings
+
+| Method | Endpoint                 | Auth  | Description              |
+|--------|--------------------------|-------|--------------------------|
+| GET    | `/admin/settings`        | Admin | Get all settings         |
+| PATCH  | `/admin/settings`        | Admin | Update site settings     |
+| GET    | `/admin/dashboard`       | Admin | Stats: orders, users, revenue |
+
+### 📄 Swagger
+
+```
+GET  /api/docs
+```
+
+---
+
+## 🧪 Running Tests
 
 ```bash
 # unit tests
-$ npm run test
+npm run test
 
 # e2e tests
-$ npm run test:e2e
+npm run test:e2e
 
-# test coverage
-$ npm run test:cov
+# coverage
+npm run test:cov
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## 🐳 Docker
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+docker-compose up -d
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+`docker-compose.yml` includes the app + PostgreSQL.
 
-## Resources
+---
 
-Check out a few resources that may come in handy when working with NestJS:
+## 📸 Screenshots
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+> _Add screenshots of Swagger UI, admin panel, or front-end here._
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## 🤝 Contributing
 
-## Stay in touch
+1. Fork the repo
+2. Create a feature branch (`git checkout -b feat/awesome`)
+3. Commit changes (`git commit -m 'feat: add awesome'`)
+4. Push (`git push origin feat/awesome`)
+5. Open a Pull Request
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+---
 
-## License
+## 📄 License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+MIT — see [LICENSE](./LICENSE).
+
+---
+
+<p align="center">Made with ❤️ using NestJS</p>
