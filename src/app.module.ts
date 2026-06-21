@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from './auth/auth.module';
-import { UserModule } from './user/user.module';
-import { CartModule } from './cart/cart.module';
-import { ImageModule } from './image/image.module';
-import { CategoryModule } from './category/category.module';
-import { ProductModule } from './product/product.module';
-import { CouponModule } from './coupon/coupon.module';
-import { PaymentModule } from './payment/payment.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { CartModule } from './modules/cart/cart.module';
+import { CategoryModule } from './modules/category/category.module';
+import { CouponModule } from './modules/coupon/coupon.module';
+import { ImageModule } from './modules/image/image.module';
+import { PaymentModule } from './modules/payment/payment.module';
+import { ProductModule } from './modules/product/product.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -22,7 +22,8 @@ import { PaymentModule } from './payment/payment.module';
         type: 'mariadb',
         url: configService.get<string>('DB_URL'),
         autoLoadEntities: true,
-        synchronize: true,
+        synchronize: false,
+        migrationsRun: false,
       }),
     }),
     AuthModule,

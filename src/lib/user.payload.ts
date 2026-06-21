@@ -1,6 +1,6 @@
-import { UserRole } from '@/lib/user.role';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
+import { UserRole } from '@/lib/user.role';
 
 interface RequestWithUser extends Request {
   user: UserPayload;
